@@ -1,0 +1,957 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<base target="_blank">
+
+<title> TurkChat Sohbet V1 </title>
+
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="relaxed/style.css" />
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+
+<Script>
+	
+	var msg_width=79.9;
+	
+	var language={
+			"Settings":{"Platform":"Baglan","Commands":"komutlar","List of Channels":"Kanal Listesi","Find Nickname":"Rumuz bul","Nick Publicity":"Rumuz tanit","Register":"Register","Writing Copy":"Yazi Kopyala","about":"Hakkinda","Channel Operations":"kanal islemleri","Nick Operations":"Nick islemleri","Private Messages":"Ozel Mesajlar","Clear Screen":"Ekran Temizle","Date":"Tarih","Enter Channel":"Kanala Gir","Leave the Channel":"Kanaldan Cik","Busy Mode":"Mesgul Modu","Invitation":"Davet","Change Nickname":"Rumuz Degis","Be busy":"Mesgul Ol","Come back":"Geri Don","Block":"Engelle","Acer Barriers":"Engel Ac","Barriers List":"Engel Listesi","Ok":"Tamam","Cancel":"Iptal","Close":"Kapat","Leave Channel":"Kanaldan Ayril","Command":"Komut","Smiley Emoticons":"Surat Ifadeleri","Color Palette":"Renk Paleti","Invite":"davet et", "Join Channel":"Kanal katıl","Number of Channels":"Kanal Sayısı","Change Nick":"Değişim Nick","Leave Channel":"Bırak Kanal","Channel Info":"kanal bilgisi","Clear":"Açık","Kickout":"Atmak","Mute":"dilsiz","Close Message":"Yakın Mesajı","Settings":"Ayarlar","Language":"Lisan","Change Text Color":"Değişim Metin Rengi","Smileys":"Suratlar","Full Screen":"Tam ekran","Ping":"Ping","Version":"Versiyon","Finger":"Finger","Whois":"Whois","Friends List":"Arkadaş listesi","Private Message":"Özel mesaj"}
+		
+	};
+	
+</script>
+
+<script>
+	var Channels=["EZZ","yarisma","carsaf.nl","sohbet","35+","ask","gurbet","radyo","hollanda"];
+	var restricted_Inputs=["/j","/join","/kick","/ban","/part"];
+	var inputMaxLength=200;
+
+		var j=0;
+		var performActions=0;
+		
+		function JoinChannels()
+		{
+			if(j<Channels.length)
+			{
+				
+					var prevVal=$(".inp").val();
+					
+					$(".inp").val("/join #"+Channels[j]);
+					
+					var e = $.Event('keydown', { keyCode: 13 });
+					$('.inp').trigger(e);
+					
+					$(".inp").val(prevVal);
+
+					console.log(Channels[j]);
+					
+					var delay=00; //1 seconds
+
+					setTimeout(function(){
+					  JoinChannels();
+					}, delay);
+
+				
+			}
+			
+			else
+			{
+				performActions=1;
+				
+				$("#textInput").attr("maxlength",inputMaxLength);
+
+			}
+			
+			j++;
+			//alert('df');
+		}
+		
+		function JoinChannelsAgain()
+		{
+			j=0;
+			JoinChannels();
+		}
+		
+</script>
+
+<script>
+
+		function clearArea()
+		{
+			var prevVal=$(".inp").val();
+			
+			$(".inp").val("/clear");
+			
+			var e = $.Event('keydown', { keyCode: 13 });
+			$('.inp').trigger(e);
+			
+			$(".inp").val(prevVal);
+			//$(".inp").val("10 3546446");
+			
+		}
+		
+		function changeColor()
+		{
+			$("#smiley-container").hide(150);
+			$("#color-container").toggle(150);
+		}
+		
+		function showEmoIcons()
+		{
+			$("#color-container").hide(150);
+			$("#smiley-container").toggle(150);
+		}
+		
+		function chngeForeColor(val)
+		{
+			$("#foreground-color").removeClass();
+			$("#foreground-color").addClass("BG"+val);
+			$("#foreground-color").attr("data-val",val);
+			
+			/*var prevVal=$(".inp").val();
+			
+			$(".inp").val("/clear");
+			
+			var e = $.Event('keydown', { keyCode: 13 });
+			$('.inp').trigger(e);
+			
+			$(".inp").val(prevVal);*/
+			//$(".inp").val("10 3546446");
+		}
+		
+		function chngeBgColor(val)
+		{
+			$("#background-color").removeClass();
+			$("#background-color").attr("data-val",val);
+			
+			if(val=="none")
+			{
+				$("#background-color").addClass("none");
+			}
+			
+			else
+			{
+				$("#background-color").addClass("BG"+val);
+			}
+		}
+		
+		function checkChars()
+		{
+		
+			var prevVal=$(".inp").val();
+			
+			$.map(restricted_Inputs,function(element,index)
+			{
+				
+				prevVal=prevVal.replace(element,"");
+				
+			});
+			
+			$(".inp").val(prevVal);
+			
+		}
+		
+		function chngColorOnEnter(e)
+		{
+			var val=$(".inp").val();
+			//console.log(val.match(/whois/g));
+			
+			if(val!="/clear"&&val.match(/\/whois/g)==null&&val.match(/\/topic/g)==null&&val.match(/\/kick/g)==null&&val.match(/\/ban/g)==null&&val.match(/\/join/g)==null&&val.match(/\/j/g)==null&&val.match(/\/part/g)==null&&val.match(/\/voice/g)==null&&val.match(/\/devoice/g)==null&&val.match(/\/msg/g)==null&&val.match(/\/action/g)==null&&val.match(/\/nick/g)==null&&val.match(/\/block/g)==null&&val.match(/\/ignore/g)==null&&val.match(/\/ping/g)==null&&val.match(/\/date/g)==null&&val.match(/\/version/g)==null&&val.match(/\/leave/g)==null&&val.match(/\/quit/g)==null&&val.match(/\/query/g)==null&&val.match(/\/invite/g)==null&&val.match(/\/closechat/g)==null&&val.match(/\/closemsg/g)==null&&val.match(/\/umode/g)==null&&val.match(/\/silence/g)==null&&val.match(/\/topic/g)==null) 
+			{
+			
+				var keyCode = e.keyCode || e.which;
+			
+				if (keyCode == '13' && performActions==1)
+				{
+					var bg=$("#background-color").attr("data-val");
+					var fg=$("#foreground-color").attr("data-val");
+					
+					if(bg=="none")
+					{
+						var str=""+fg+" "+val;
+					}
+					
+					else
+					{
+						var str=""+fg+","+bg+" "+val;
+					}
+					
+					$(".inp").val(str);
+					
+					//var e = $.Event('keydown', { keyCode: 13 });
+					//$('.inp').trigger(e);
+					
+					//alert(str);
+				
+				}
+			}
+		}
+		
+		function addSmiley(i)
+		{
+			var vl=$(".inp").val();
+			$(".inp").val(vl+" "+i+" ");
+		}
+		
+		maxLen=200;
+
+		
+</script>
+
+
+</head>
+<body>
+
+  	
+	
+        <div id="kiwi" class="theme_relaxed">
+		
+			<!--<h3 id="headingTurk">TurkChat Sohbet V1</h3>-->
+
+            <div class="memberlists_resize_handle"></div>
+			
+			
+            <div class="panels">
+				
+                <div class="panel_container container1" style="position:relative;top: 25px;">
+					<div class='panel-header1'> &nbsp;&nbsp; TurkChat Sohbet V1 <div onclick="toggleRightBar()" class="close_icon1" title="Friends List"></div> <div onclick="make_FullScreen()" class="full_screen_icon" title="Full Screen"></div> </div>
+					<div class='panel-header-settings'> 
+						<div class="kickOut" title="Kickout" onclick="kickHimeOut()"></div>
+						<div class="mute" title="Mute" onclick="muteOrUnmute()"></div>
+						<!--<div  class="closemsgs" onclick="closePrivateMsg()" title="Close Message"></div>-->
+						
+						<div class="channel_tools">
+						<table>
+						<tr>
+                            <td class="commands" title="Commands">
+								<ul id="dropDownOptions">
+								
+								<li class="hasSubMenu0"><span class="menuOptions">Channel Operations</span> <span class="arrow">&#9658;</span>
+					 
+									<ul id="SubdropDownOptions0">
+										<li onclick="joinChanPopUp()"><span class="menuOptions">Enter Channel</span></li>
+										<li onclick="closeActiveWindow()"><span class="menuOptions">Leave the Channel</span></li>
+										<li onclick="banSelectedNick()"><span class="menuOptions">Ban</span></li>
+										<li onclick="kickSelectedNick()"><span class="menuOptions">Kick</span></li>
+									</ul>
+								</li>
+								
+								<li class="hasSubMenu1">
+									<span class="menuOptions">Nick Operations</span> <span class="arrow">&#9658;</span>
+					 
+									<ul id="SubdropDownOptions1">
+										<li onclick="privateMsgSelectedNick()"><span class="menuOptions">Private Message</span></li>
+										<li onclick="whoisSelectedNick()"><span class="menuOptions">Whois</span></li>
+										<li class="hasSubSubMenu1"><span class="menuOptions">Busy Mode</span>
+											
+											<span class="arrow2">&#9658;</span>
+					 
+											<ul id="SubSubdropDownOptions1">
+												<li><span class="menuOptions">Be busy</span></li>
+												<li><span class="menuOptions">Come back</span></li>
+											</ul>
+										</li>
+										<!--<li onclick="inviteSelectedNick()"><span class="menuOptions">Invitation</span></li>-->
+										<li onclick="changeNipckPopUp()"><span class="menuOptions">Change Nickname</span></li>
+									</ul>
+								</li>
+								
+								<li class="hasSubMenu2"><span class="menuOptions">Private Messages</span> <span class="arrow">&#9658;</span>
+					 
+									<ul id="SubdropDownOptions2">
+										<li onclick="blockSelectedNick()"><span class="menuOptions">Block</span></li>
+										<li><span class="menuOptions">Acer Barriers</span></li>
+										<li><span class="menuOptions">Barriers List</span></li>
+									</ul>
+								</li>
+								
+								<!--<li class="hasSubMenu3"><span class="menuOptions">CTCP</span> <span class="arrow">&#9658;</span>
+					 
+									<ul id="SubdropDownOptions3">
+										<li onclick="pingSelectedNick()"><span class="menuOptions">Ping</span></li>
+										<li onclick="dateSelectedNick()"><span class="menuOptions">Date</span></li>
+										<li onclick="versionSelectedNick()"><span class="menuOptions">Version</span></li>
+										<li><span class="menuOptions">Finger</span></li>
+									</ul>
+								</li>-->
+								
+								<li onclick="clearArea()"><span class="menuOptions">Clear Screen</span></li>
+							</ul>
+							
+							</td>
+							
+							<td onclick="joinChanPopUp()" class="jChannel" id="jChannel" title="Join Channel"></td>
+							<td onclick="JoinChannelsAgain()" class="fa fa-building-o" title="Number of Channels"></td>
+							
+							<td onclick="changeNipckPopUp()" class="editName" title="Change Nick"></td>
+							<td class="clearText" title="Clear" onclick="clearArea();"></td>
+							<!--<td class="infoChannel" title="about"></td>-->
+							<td onclick="closeActiveWindow()" class="exitChannel" title="Leave Channel"></td>
+							<!--<td class="settingsChannel" title="Settings"></td>
+							<!--<i class="fa fa-angle-double-right right-bar-toggle-inner" title="Hide"></i> -->
+							
+						</tr>
+						</table>
+						</div>
+					</div>
+					
+					<div class="right_bar" style="top: 0px; bottom: 72px; opacity: 1;">
+						<div class="right-bar-toggle" style="display: none;"><i class="fa-angle-double-right fa"></i></div>
+						<div class="right-bar-content">
+							<div class="memberlists"><div class=""><div class="activeChannel">#hollanda</div><div class="meta">0 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">RadyoBizimFM</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Ufuk</span></a></li></ul></div><div class=""><div class="activeChannel">#hollanda</div><div class="meta">0 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">BiZiMDiYaR</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">BiZiMYaRiS</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">GLOBAL</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">TurkChatNL</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Wat`Yoq</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">Kagan-CH</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">DADASIM-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Griekseman</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">GUUR-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SiirBaZ</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">tariknl</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">X</span></a></li></ul></div><div class=""><div class="activeChannel">#hollanda</div><div class="meta">0 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">CaRSaF</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">GeVeZe</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Okey24</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Wat`Yoq</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">X</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">DADASIM-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Griekseman</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">GUUR-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SiirBaZ</span></a></li></ul></div><div class=""><div class="activeChannel">#hollanda</div><div class="meta">0 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Asya`Yoq</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Chat-Sohbet</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">SaZiYe</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">TurkCafeNL</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Wat`Yoq</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">DADASIM-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Griekseman</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Guest54994</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Guest72917</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">GUUR-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Kagan-CH</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">POSOFxPOWER</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SEMA_NUR</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SiirBaZ</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">tariknl</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">X</span></a></li></ul></div><div class=""><div class="activeChannel">#hollanda</div><div class="meta">0 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">BiZiMDiYaR</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">GLOBAL</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Okey24</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">RadyoBizimFM</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">TurkChatNL</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Wat`Yoq</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Asya`Yoq</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">BiZiMYaRiS</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">DADASIM-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Foekie_t</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Griekseman</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Guest54994</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Guest72917</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">GUUR-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Kagan-CH</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">POSOFxPOWER</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SEMA_NUR</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SiirBaZ</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">tariknl</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Ufuk</span></a></li></ul></div><div class=""><div class="activeChannel">#hollanda</div><div class="meta">0 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">aSK</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">GLOBAL</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Okey24</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">RadyoBizimFM</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">Asya`Yoq</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">DADASIM-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Foekie_t</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Griekseman</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Guest54994</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Guest72917</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">GUUR-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">POSOFxPOWER</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SiirBaZ</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">tariknl</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Ufuk</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Wat`Yoq</span></a></li></ul></div><div class=""><div class="activeChannel">#hollanda</div><div class="meta">0 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Asya`Yoq</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">BiZiMDiYaR</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">DosT</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">GuRBeT</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">SaZiYe</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">TurkCafeNL</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Wat`Yoq</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">DADASIM-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Griekseman</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">GUUR-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">POSOFxPOWER</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SEMA_NUR</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SiirBaZ</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">tariknl</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Ufuk</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">X</span></a></li></ul></div><div class=""><div class="activeChannel">#hollanda</div><div class="meta">0 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Asya`Yoq</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">BiZiMDiYaR</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">MiNNoS</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Okey24</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">RadyoBizimFM</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">BeLaLIm</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">GLOBAL</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">POSOFxPOWER</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">Ufuk</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">Wat`Yoq</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">bucur</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">DADASIM-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Griekseman</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">GUUR-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Kagan-CH</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SEMA_NUR</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">tariknl</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">X</span></a></li></ul></div><div class="active"><div class="activeChannel">#hollanda</div><div class="meta">23 Users</div><ul><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">BiZiMDiYaR</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">BiZiMYaRiS</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">GLOBAL</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">Okey24</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">RadyoBizimFM</span></a></li><li class="mode o"><a class="nick"><span class="prefix">@</span><span class="nickName">TurkChatNL</span></a></li><li class="mode o v"><a class="nick"><span class="prefix">@</span><span class="nickName">Wat`Yoq</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">Asya`Yoq</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">Foekie_t</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">SiirBaZ</span></a></li><li class="mode v"><a class="nick"><span class="prefix">+</span><span class="nickName">Ufuk</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">bucur</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">DADASIM-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Griekseman</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Guest54994</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Guest72917</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">GUUR-NL</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">Kagan-CH</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">kiwi_76148</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">POSOFxPOWER</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">SEMA_NUR</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">tariknl</span></a></li><li class="mode "><a class="nick"><span class="prefix"></span><span class="nickName">X</span></a></li></ul></div></div>
+						</div>
+					</div>
+					
+					<div class="panel" style="display: block;"><div class="messages" style="width: 79.9%; border-right-style: none;"><div class="msg topic last_seen"><div class="time">[16:47]</div><div class="nick" style="color:#971a1a;">&lt;&gt;</div><div class="text" style="">ⓘ BiZiMDiYaR Sohbet Kanali... </div></div></div></div>
+					
+				</div>
+            </div>          
+
+            <div class="controlbox" style="display:block">
+                <div class="input">
+					<img class='txtColor' id='txtColor' title="Change Text Color" height='18' width='20' onclick="changeColor();">
+                    <img class='smileys' id='smileys' title="Smileys" height='20' width='20' onclick="showEmoIcons();"> 
+					<span class="nick"> </span>
+                    <div class="input_wrap"><textarea class="inp" id="textInput" onkeydown="chngColorOnEnter(event)" onkeyup="checkChars()"></textarea> </div>
+                    <div class="input_tools"></div>
+                </div>
+				
+				<div id="joinChan">
+					<input type="text" placeholder="Enter Channel" class="inp">
+					<input type="button" class="btn" value="Join" onclick="joinChannel()">
+					<input type="button" class="btn" value="Cancel" onclick="cancelChannel()">
+				</div>
+				
+				<div id="changeNick">
+					<input type="text" placeholder="Enter Nick" class="inp">
+					<input type="button" class="btn" value="Change" onclick="changeNick()">
+					<input type="button" class="btn" value="Cancel" onclick="cancelChngeNick()">
+				</div>
+				
+				<div id="color-container">
+					<div class="color-picker" id="color-picker">
+						<h4>Font Colors</h4>
+						<span id="foreground-color" data-val="1" class="BG1"></span>
+						<ul id="foreground-color-buttons">
+							<li><a  onclick="chngeForeColor(0)"><span class="BG0"></span></a></li>
+							<li><a  onclick="chngeForeColor(1)"><span class="BG1"></span></a></li>
+							<li><a  onclick="chngeForeColor(2)"><span class="BG2"></span></a></li>
+							<li><a  onclick="chngeForeColor(3)"><span class="BG3"></span></a></li>
+							<li><a  onclick="chngeForeColor(4)"><span class="BG4"></span></a></li>
+							<li><a  onclick="chngeForeColor(5)"><span class="BG5"></span></a></li>
+							<li><a  onclick="chngeForeColor(6)"><span class="BG6"></span></a></li>
+							<li><a  onclick="chngeForeColor(7)"><span class="BG7"></span></a></li>
+							<li><a  onclick="chngeForeColor(8)"><span class="BG8"></span></a></li>
+							<li><a  onclick="chngeForeColor(9)"><span class="BG9"></span></a></li>
+							<li><a  onclick="chngeForeColor(10)"><span class="BG10"></span></a></li>
+							<li><a  onclick="chngeForeColor(11)"><span class="BG11"></span></a></li>
+							<li><a  onclick="chngeForeColor(12)"><span class="BG12"></span></a></li>
+							<li><a  onclick="chngeForeColor(13)"><span class="BG13"></span></a></li>
+							<li><a  onclick="chngeForeColor(14)"><span class="BG14"></span></a></li>
+							<li><a  onclick="chngeForeColor(15)"><span class="BG15"></span></a></li>
+						</ul>
+						<h4>Background Colors</h4>
+						<span id="background-color" data-val="none" class="none"></span>
+						<ul id="background-color-buttons">
+							<li><a  onclick="chngeBgColor('none')"><span class="none"></span></a></li>
+							<li><a  onclick="chngeBgColor(1)"><span class="BG1"></span></a></li>
+							<li><a  onclick="chngeBgColor(2)"><span class="BG2"></span></a></li>
+							<li><a  onclick="chngeBgColor(3)"><span class="BG3"></span></a></li>
+							<li><a  onclick="chngeBgColor(4)"><span class="BG4"></span></a></li>
+							<li><a  onclick="chngeBgColor(5)"><span class="BG5"></span></a></li>
+							<li><a  onclick="chngeBgColor(6)"><span class="BG6"></span></a></li>
+							<li><a  onclick="chngeBgColor(7)"><span class="BG7"></span></a></li>
+							<li><a  onclick="chngeBgColor(8)"><span class="BG8"></span></a></li>
+							<li><a  onclick="chngeBgColor(9)"><span class="BG9"></span></a></li>
+							<li><a  onclick="chngeBgColor(10)"><span class="BG10"></span></a></li>
+							<li><a  onclick="chngeBgColor(11)"><span class="BG11"></span></a></li>
+							<li><a  onclick="chngeBgColor(12)"><span class="BG12"></span></a></li>
+							<li><a  onclick="chngeBgColor(13)"><span class="BG13"></span></a></li>
+							<li><a  onclick="chngeBgColor(14)"><span class="BG14"></span></a></li>
+							<li><a  onclick="chngeBgColor(15)"><span class="BG15"></span></a></li>
+						</ul>
+					</div>
+				</div>
+				
+				<div id="smiley-container">
+					<div class="smiley-pages">
+						<div class="smiley-page">
+							<span class="add-emoticon smiley1" title=":)" onclick="addSmiley(':)')" data-text=":)"></span>
+							<span class="add-emoticon smiley2" title=":3" onclick="addSmiley(':3')" data-text=":3"></span>
+							<span class="add-emoticon smiley3" title=";3" onclick="addSmiley(';3')" data-text=";3"></span>
+							<span class="add-emoticon smiley4" title=";)" onclick="addSmiley(';)')" data-text=";)"></span>
+							<span class="add-emoticon smiley5" title="^^" onclick="addSmiley('^^')" data-text=":)"></span>
+							<span class="add-emoticon smiley6" title=":(" onclick="addSmiley(':(')" data-text=":("></span>
+							<span class="add-emoticon smiley7" title=";_;" onclick="addSmiley(';_;')" data-text=";("></span>
+							<span class="add-emoticon smiley8" title="<3" onclick="addSmiley('<3')" data-text="<3"></span>
+							<span class="add-emoticon smiley9" title=";D" onclick="addSmiley(';D')" data-text=";D"></span>
+							<span class="add-emoticon smiley10" title=":P" onclick="addSmiley(':P')" data-text=":P"></span>
+							<span class="add-emoticon smiley11" title=":D" onclick="addSmiley(':D')" data-text=":D"></span>
+							<span class="add-emoticon smiley12" title=":S" onclick="addSmiley(':S')" data-text=":S"></span>
+							<span class="add-emoticon smiley13" title=":/" onclick="addSmiley(':/')" data-text=":/"></span>
+							<span class="add-emoticon smiley14" title="xP" onclick="addSmiley('xP')" data-text=":)"></span>
+							<span class="add-emoticon smiley15" title=":O" onclick="addSmiley(':O')" data-text=":O"></span>
+							<span class="add-emoticon smiley16" title=":)" onclick="addSmiley(':)')" data-text=":)"></span>
+							<span class="add-emoticon smiley17" title=">_<" onclick="addSmiley('>_<')" data-text=">_<"></span>
+							<span class="add-emoticon smiley18" title="o.0" onclick="addSmiley('o.0')" data-text=":)"></span>
+							<span class="add-emoticon smiley19" title="0.o" onclick="addSmiley('0.o')" data-text=":)"></span>
+							<span class="add-emoticon smiley20" title="XD" onclick="addSmiley('XD')" data-text=":)"></span>
+
+						</div><!-- smiley-page -->
+					</div><!-- smiley-pages -->
+				</div>
+				
+				<div class="toolbar">
+					<div class="app_tools">
+						<ul class="main">
+							<li class="settings"><i class="fa fa-cogs" title="Settings"></i></li>
+							<li class="startup"><i class="fa fa-home" title="Home"></i></li>
+						</ul>
+					</div>
+								
+					<div class="align_tab">
+						<div class="tabs" style="top: 0px; bottom: 72px;"><ul class="connections"><li class="connection"><ul class="panellist"><li class="server fa fa-nonexistant alert_activity" style="display: none;"><span>Server</span><div class="activity">16</div></li><li class="alert_activity"><span>#35+</span><div class="activity">2</div></li><li class="alert_activity"><span>#ask</span><div class="activity">2</div></li><li class="alert_activity"><span>#carsaf.nl</span><div class="activity">1</div></li><li class="active"><span>#EZZ</span><div class="activity zero">0</div><span class="part fa fa-nonexistant"></span></li><li class="alert_activity"><span>#gurbet</span><div class="activity">1</div></li><li class="alert_activity"><span>#hollanda</span><div class="activity">3</div></li><li class="alert_activity"><span>#radyo</span><div class="activity">70</div></li><li class="alert_activity"><span>#sohbet</span><div class="activity">1</div></li><li class="alert_activity"><span>#yarisma</span><div class="activity">139</div></li></ul></li></ul><ul class="panellist applets"></ul></div>
+					</div> 
+								
+					<div class="topic">
+						<div contenteditable="true"></div>
+					</div>
+
+					<div class="status_message"></div>
+				</div>
+							
+            </div>
+        </div>
+   
+
+<script>
+		//my modified code...
+	
+		function mkAlert()
+		{
+			alert('d');
+		}
+			
+		setTimeout(function(){translatePage();},500);
+		setTimeout(function(){$("#server_select_nick").val("");},250);
+		
+	function translatePage()
+	{	
+		$(".jChannel").attr("title",language["Settings"][$(".jChannel").attr("title")]);
+		$(".fa-building-o").attr("title",language["Settings"][$(".fa-building-o").attr("title")]);
+		$(".editName").attr("title",language["Settings"][$(".editName").attr("title")]);
+		$(".infoChannel").attr("title",language["Settings"][$(".infoChannel").attr("title")]);
+		$(".exitChannel").attr("title",language["Settings"][$(".exitChannel").attr("title")]);
+		$(".settingsChannel").attr("title",language["Settings"][$(".settingsChannel").attr("title")]);
+		$(".clearText").attr("title",language["Settings"][$(".clearText").attr("title")]);		
+		$(".infoChannel").attr("title",language["Settings"][$(".infoChannel").attr("title")]);
+		$(".kickOut").attr("title",language["Settings"][$(".kickOut").attr("title")]);	
+		$(".mute").attr("title",language["Settings"][$(".mute").attr("title")]);
+		$(".closemsgs").attr("title",language["Settings"][$(".closemsgs").attr("title")]);
+		
+		$(".txtColor").attr("title",language["Settings"][$(".txtColor").attr("title")]);
+		$(".smileys").attr("title",language["Settings"][$(".smileys").attr("title")]);	
+		$(".full_screen_icon").attr("title",language["Settings"][$(".full_screen_icon").attr("title")]);
+		$(".close_icon1").attr("title",language["Settings"][$(".close_icon1").attr("title")]);
+		$(".commands").attr("title",language["Settings"][$(".commands").attr("title")]);
+		
+		$(".menuOptions").each(function(index,element)
+		{			
+			$(element).html(language["Settings"][$(element).html()]);
+		});
+		$("#server_select_nick").val("");
+	}
+	
+	function kickHimeOut()
+	{
+		var nickName=$("li.nickSelected .nick .nickName").text();
+		
+		var prevVal=$(".inp").val();
+			
+		$(".inp").val("/kick "+nickName);
+			
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+			
+		$(".inp").val(prevVal);
+	}
+	
+	function pingSelectedNick()
+	{
+		var nickName=$("li.nickSelected .nick .nickName").text();
+		
+		var prevVal=$(".inp").val();
+			
+		$(".inp").val("/ping "+nickName);
+			
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+			
+		$(".inp").val(prevVal);
+	}
+	
+	function versionSelectedNick()
+	{
+		//var nickName=$("li.nickSelected .nick .nickName").text();
+		
+		var prevVal=$(".inp").val();
+			
+		$(".inp").val("/version");
+			
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+			
+		$(".inp").val(prevVal);
+	}
+	
+	function dateSelectedNick()
+	{
+		//var nickName=$("li.nickSelected .nick .nickName").text();
+		
+		var prevVal=$(".inp").val();
+			
+		$(".inp").val("/date");
+			
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+			
+		$(".inp").val(prevVal);
+	}
+	
+	
+	
+	function privateMsgSelectedNick()
+	{	
+		var nickName=$("li.nickSelected .nick .nickName").text();
+		
+		var prevVal=$(".inp").val();
+			
+		$(".inp").val("/query "+nickName);
+			
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+			
+		$(".inp").val(prevVal);
+	}
+	
+	function closeActiveWindow()
+	{
+		/*var windowName=$(".activeChannel").text();
+		
+		windowName=windowName.substr(0,windowName.indexOf("#",1));
+		
+		console.log(windowName);*/
+		
+		var prevVal=$(".inp").val();
+			
+		$(".inp").val("/part");
+			
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+			
+		$(".inp").val(prevVal);
+		
+	}
+	
+	function closePrivateMsg()
+	{
+		var prevVal=$(".inp").val();
+			
+		$(".inp").val("/leave");
+			
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+			
+		$(".inp").val(prevVal);
+	}
+	
+	function joinChanPopUp()
+	{
+		$("#joinChan").show(10);
+		$("#joinChan .inp").show(150);
+		$("#joinChan .inp").attr("placeholder","Enter Channel");
+		$("#joinChan .btn").show(150);
+	}
+	
+	function blockSelectedNick()
+	{
+		var nickName=$("li.nickSelected .nick .nickName").text();
+		
+		var prevVal=$(".inp").val();
+			
+		$(".inp").val("/ignore "+nickName);
+			
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+			
+		$(".inp").val(prevVal);
+	}
+	
+	function changeNipckPopUp()
+	{
+		$("#changeNick").show(10);
+		$("#changeNick .inp").show(150);
+		$("#changeNick .inp").attr("placeholder","Enter Nick");
+		$("#changeNick .btn").show(150);
+	}
+	
+	function cancelChngeNick()
+	{
+		$("#changeNick").hide(150);
+		$("#changeNick .inp").hide(150);
+		$("#changeNick .btn").hide(150);
+	}
+
+	
+	function changeNick()
+	{	
+		var nickName=$("#changeNick .inp").val();
+			
+		var prevVal=$(".inp").val();
+				
+		$(".inp").val("/nick "+nickName);
+				
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+				
+		$(".inp").val(prevVal);
+		
+		$("#changeNick").hide(150);
+		$("#changeNick .inp").hide(150);
+		$("#changeNick .btn").hide(150);
+	}
+	
+	
+	function cancelChannel()
+	{
+		$("#joinChan").hide(150);
+		$("#joinChan .inp").hide(150);
+		$("#joinChan .btn").hide(150);
+	}
+	
+	function joinChannel()
+	{
+		var channel=$("#joinChan .inp").val();
+		
+		if(channel!=="")
+		{		
+			$("#joinChan").css("background","#000");
+			
+			var prevVal=$(".inp").val();
+			
+			$(".inp").val("/join #"+channel);
+				
+			var e = $.Event('keydown', { keyCode: 13 });
+			$('.inp').trigger(e);
+				
+			$(".inp").val(prevVal);
+			
+			$("#joinChan").hide(150);
+			$("#joinChan .inp").hide(150);
+			$("#joinChan .btn").hide(150);
+			
+		}
+		
+		else
+		{
+			$("#joinChan").css("background","#EC0202");
+		}
+	}
+	
+	function kickSelectedNick()
+	{
+		var nickName=$("li.nickSelected .nick .nickName").text();
+			
+		var prevVal=$(".inp").val();
+				
+		$(".inp").val("/kick "+nickName);
+				
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+				
+		$(".inp").val(prevVal);
+			
+	}
+	
+	function banSelectedNick()
+	{
+	
+		var nickName=$("li.nickSelected .nick .nickName").text();
+			
+		var prevVal=$(".inp").val();
+				
+		$(".inp").val("/ban "+nickName);
+				
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+				
+		$(".inp").val(prevVal);
+	}
+	
+	function whoisSelectedNick()
+	{
+	
+		var nickName=$("li.nickSelected .nick .nickName").text();
+			
+		var prevVal=$(".inp").val();
+				
+		$(".inp").val("/whois "+nickName);
+				
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+				
+		$(".inp").val(prevVal);alert('d');
+	}
+	
+	var full=0;
+	function make_FullScreen()
+	{
+		if(full==0)
+		{
+			$("#kiwi").css({"width":"100%"});
+			$("#kiwi").css({"width":"102.2%","left":"-0.7%"});
+			$(".panel-header1").css({"width":"98%","top":"0px"});
+			$(".panel-header-settings").css({"width":"98%","top":"0px"});
+			
+			$(".full_screen_icon").addClass("small_screen_icon");
+			
+			if($(".close_icon1").hasClass("privateMsgPerson"))
+			{
+				$(".messages").css({"width":"98%","top":"0px","height": "473px"});
+			}
+			else
+			{
+				$(".messages").css({"width":"79.9%","top":"0px","height": "473px"});
+			}
+			
+			$(".controlbox").css({"width":"98%"});
+			$(".tabs").css({"width":"100%"});
+			$(".nick").css({"border":"none"});
+			$("#kiwi .right_bar").css({"left":"80.65%","width": "18%","max-width":"none","margin-top":"57px","height":"473px"});
+			$(".memberlists").css({"height": "457px"});
+			
+			if($("#kiwi .right_bar").hasClass("addDisplayNone"))
+			{
+				$("#kiwi .right_bar").css({"display":"none"});
+				$(".messages").css({"width":"98%"});
+			}
+			else
+			{
+				$("#kiwi .right_bar").css({"display":"block"});
+			}
+				
+			full=1;
+			
+			//for making height 100% fully cover
+			
+			$("#kiwi .panels").css({"top":"-25px"});
+			$("#kiwi .controlbox").css({"top":"0px"});
+			$("#kiwi .panel").css({"height":"513px"});
+			$("#kiwi .right_bar").css({"height":"513px"});
+			$("#kiwi .memberlists").css({"height":"497px"});
+			$(".messages").css({"height":"513px"});
+			
+			/*$("#kiwi").css({"height":"100%"});
+			$("#kiwi .panels").css({"height":"90%","top":"-4%"});
+			$(".panel-header1").css({"height":"5%"});
+			$(".panel-header-settings").css({"height":"4.5%"});
+			$("#kiwi .channel_tools").css({"height":"100%"});
+			$("#kiwi .right_bar").css({"height":"85%","top":"0px"});
+			$("#kiwi .memberlists").css({"height":"97%"});
+			$("#kiwi .panel").css({"height":"85%"});
+			$(".messages").css({"height":"100%"});
+			$("#kiwi .controlbox").css({"top":"-5%","height": "10%"});
+			$("#kiwi .align_tab").css({"height":"100%"});
+			$("#kiwi .toolbar .tabs").css({"height":"100%"});
+			$("#kiwi .controlbox .input").css({"height":"40%"});
+			$("#kiwi .toolbar").css({"height":"65%","box-shadow":"none"});
+			$("#kiwi .controlbox .input").css({"height":"40%"});*/
+
+		}
+		
+		else
+		{
+			$("#kiwi").attr({"style":""});
+			$("#kiwi").css({"width":"1013px","left":"initial"});
+			$(".panel-header1").attr({"style":""});
+			$(".panel-header-settings").attr({"style":""});
+			
+			$(".full_screen_icon").removeClass("small_screen_icon");
+			
+			if($(".close_icon1").hasClass("privateMsgPerson"))
+			{
+				$(".messages").css({"width":"98%","top":"14px","height": "461px"});
+				$(".panel-header-settings").css({"width":"98%","top":"14px"});
+			}
+			else
+			{
+				$(".messages").attr({"style":""});
+			}
+			
+			$(".controlbox").attr({"style":"display:block;"});
+			$(".tabs").attr({"style":"width: 100%; top: 0px; bottom: 72px;"});
+			$(".nick").attr({"style":""});
+			$("#kiwi .right_bar").attr({"style":"top: 0px; bottom: 72px;"});
+			$(".memberlists").attr({"style": ""});
+			
+			$(".panel-header-settings").css("display","inherit");
+			$(".panel-header1").css("display","inherit"); 
+			$(".right_bar").css("opacity","1");
+			
+			if($("#kiwi .right_bar").hasClass("addDisplayNone"))
+			{
+				$("#kiwi .right_bar").css({"display":"none"});
+				$(".messages").css({"width":"98%"});
+			}
+			else
+			{
+				$("#kiwi .right_bar").css({"display":"block"});
+			}
+			
+			$("#kiwi .panels").css({"top":"0px"});
+			$("#kiwi .controlbox").css({"top":"23px"});
+			$("#kiwi .panel").css({"height":"475px"});
+			$("#kiwi .right_bar").css({"height":"461px"});
+			$("#kiwi .memberlists").css({"height":"444px"});
+			$(".messages").css({"height":"460px"});
+									
+			full=0;
+		}
+	}
+	
+	function inviteSelectedNick()
+	{
+		var nickName=$("li.nickSelected .nick .nickName").text();
+			
+		var prevVal=$(".inp").val();
+				
+		$(".inp").val("/invite "+nickName);
+				
+		var e = $.Event('keydown', { keyCode: 13 });
+		$('.inp').trigger(e);
+				
+		$(".inp").val(prevVal);
+	}
+	
+	function muteOrUnmute()
+	{
+		var voicedorDevoiced=$("li.nickSelected .nick .nickName").attr("data-voice");
+		
+		if(!(voicedorDevoiced)||voicedorDevoiced=="voice")
+		{
+			$("li.nickSelected .nick .nickName").attr("data-voice","devoice");
+			var nickName=$("li.nickSelected .nick .nickName").text();
+			
+			var prevVal=$(".inp").val();
+				
+			$(".inp").val("/devoice "+nickName);
+				
+			var e = $.Event('keydown', { keyCode: 13 });
+			$('.inp').trigger(e);
+				
+			$(".inp").val(prevVal);
+				
+			$("li.nickSelected").css("background","rgb(255, 80, 80)"); 
+			$("li.nickSelected").addClass("devoice");
+			$("li.nickSelected .nick").css("color","#fff"); 
+		}
+		
+		else
+		{
+			$("li.nickSelected .nick .nickName").attr("data-voice","voice");
+			var nickName=$("li.nickSelected .nick .nickName").text();
+			
+			var prevVal=$(".inp").val();
+				
+			$(".inp").val("/voice "+nickName);
+				
+			var e = $.Event('keydown', { keyCode: 13 });
+			$('.inp').trigger(e);
+				
+			$(".inp").val(prevVal);
+			
+			$("li.nickSelected").css("background","#fff"); 
+			$("li.nickSelected").removeClass("devoice");
+			$("li.nickSelected .nick").css("color","#000"); 
+		}
+	}
+	
+	function toggleRightBar()
+	{    
+		if($("#kiwi .right_bar").hasClass("addDisplayNone"))
+		{
+			$("#kiwi .right_bar").removeClass("addDisplayNone");
+			$("#kiwi .messages").removeClass("noWChnge");
+			$("#kiwi .right_bar").show(150);
+			$(".close_icon1").removeClass("close_icon1_img");
+			$("#kiwi .messages").css({"width": msg_width+"%","border-right-style": "none"});
+		}
+		
+		else
+		{
+			$("#kiwi .right_bar").addClass("addDisplayNone");
+			$("#kiwi .messages").addClass("noWChnge");
+			$("#kiwi .right_bar").hide(150);
+			$(".close_icon1").addClass("close_icon1_img");
+			$("#kiwi .messages").css({"width": "98%", "border-right": "1px solid #C4C4C4","border-right-style": "solid"});
+		}
+	}
+ 
+		$(window).resize(function() {
+			if($(this).width()<=675)
+			{
+				msg_width=98;
+				$("#kiwi .right_bar").addClass("addDisplayNone");
+				$("#kiwi .right_bar").css("display","none");
+				$("#kiwi .messages").css({"width": "98%"});
+
+			}
+			else
+			{
+				if(!$(".close_icon1").hasClass("privateMsgPerson"))
+				{
+					msg_width=79.9;
+					$("#kiwi .right_bar").removeClass("addDisplayNone");
+					$("#kiwi .messages").css({"width": msg_width+"%"});
+					$("#kiwi .right_bar").show(150);
+				}
+			}
+			//console.log($(this).height());
+		});
+		
+		$(document).ready(function(){
+			$("#kiwi .memberlists > div.active ul li").on("click",function(){$("#kiwi .memberlists > div.active ul li").removeClass("nickSelected");$(this).addClass("nickSelected");});
+			
+			$('body').click(function(evt){    
+					
+					if(evt.target.id == "smiley-container"||evt.target.id=="smileys"||evt.target.id == "color-container"||evt.target.id=="txtColor"||evt.target.id == "color-picker")
+					{
+					  return 0;
+					}  
+					
+					if($(evt.target).closest('#color-container').length||$(evt.target).closest('#smiley-container').length)
+					{
+					  return 0;    
+					}
+					else
+					{
+					  $("#smiley-container").hide(150);
+					  $("#color-container").hide(150);
+					}
+				   //For descendants of menu_content being clicked, remove this check if you do not want to put constraint on descendants.
+				  
+				  //Do processing of click event here for every element except with id menu_content
+
+			});
+		});
+	
+</script>
+
+</body>
+</html>
